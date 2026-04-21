@@ -48,7 +48,16 @@ export function Charts({ records, currency }: ChartsProps) {
             <Tooltip formatter={(value) => formatMoney(Number(value), currency)} contentStyle={{ borderRadius: 8, borderColor: "#cfd8d4" }} />
             <Bar dataKey="cost" radius={[6, 6, 0, 0]}>
               {costData.map((item) => (
-                <Cell key={item.id} fill={item.type === "Прямое ЖД" ? "#23c7a5" : "#2b7fff"} />
+                <Cell
+                  key={item.id}
+                  fill={
+                    item.type === "Прямое ЖД"
+                      ? "#23c7a5"
+                      : item.type === "ЖД внутри России"
+                        ? "#f4a640"
+                        : "#2b7fff"
+                  }
+                />
               ))}
             </Bar>
           </BarChart>

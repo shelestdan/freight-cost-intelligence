@@ -12,6 +12,7 @@ const currencies: Currency[] = ["RUB", "USD", "CNY", "EUR"];
 const transportOptions: { value: "all" | TransportType; label: string }[] = [
   { value: "all", label: "Все типы" },
   { value: "rail_direct", label: "Прямое ЖД" },
+  { value: "rail_domestic", label: "ЖД внутри России" },
   { value: "sea", label: "Море" }
 ];
 

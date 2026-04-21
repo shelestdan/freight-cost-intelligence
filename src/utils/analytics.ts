@@ -62,13 +62,14 @@ export function getKpis(records: RouteRecord[], currency: Currency) {
   const averageCost = avg(records.map(displayCost));
 
   const rail = records.filter((record) => record.transport_type === "rail_direct");
+  const domesticRail = records.filter((record) => record.transport_type === "rail_domestic");
   const sea = records.filter((record) => record.transport_type === "sea");
   const railAvg = avg(rail.map(displayCost));
   const seaAvg = avg(sea.map(displayCost));
   const railSeaDelta = seaAvg && railAvg ? seaAvg - railAvg : 0;
   const railSeaPercent = railAvg ? (railSeaDelta / railAvg) * 100 : 0;
 
-  const byTransport = [rail, sea]
+  const byTransport = [rail, domesticRail, sea]
     .filter((group) => group.length)
     .map((group) => ({
       label: transportLabel(group[0].transport_type),
@@ -157,14 +158,19 @@ export function getTransportSummary(records: RouteRecord[], currency: Currency) 
     .map((record) => record.shipping_line)
     .filter(Boolean);
 
-  const laneLabels = ["ЖД прямое", ...Array.from(new Set(seaLineNames))];
+  const laneLabels = ["ЖД прямое", "Внутри России", ...Array.from(new Set(seaLineNames))];
   while (laneLabels.length < 4) {
     laneLabels.push(`Море — линия ${laneLabels.length}`);
   }
 
   return laneLabels.map((label) => {
     const found =
-      rows.find((row) => row.label === label || (label === "ЖД прямое" && row.label === "ЖД маршрут")) ??
+      rows.find(
+        (row) =>
+          row.label === label ||
+          (label === "ЖД прямое" && row.label === "ЖД маршрут") ||
+          (label === "Внутри России" && row.label === "Внутри России")
+      ) ??
       null;
     return {
       label,

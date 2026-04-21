@@ -1,4 +1,4 @@
-export type TransportType = "rail_direct" | "sea";
+export type TransportType = "rail_direct" | "rail_domestic" | "sea";
 
 export type Currency = "RUB" | "USD" | "CNY" | "EUR";
 

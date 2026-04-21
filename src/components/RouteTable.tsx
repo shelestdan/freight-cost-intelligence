@@ -20,7 +20,11 @@ type RouteTableProps = {
 };
 
 const currencies: Currency[] = ["RUB", "USD", "CNY", "EUR"];
-const transportTypes: TransportType[] = ["rail_direct", "sea"];
+const transportTypes: { value: TransportType; label: string }[] = [
+  { value: "rail_direct", label: "Прямое ЖД" },
+  { value: "rail_domestic", label: "ЖД внутри России" },
+  { value: "sea", label: "Море" }
+];
 
 const columns: { key: SortKey; label: string }[] = [
   { key: "route_name", label: "Маршрут" },

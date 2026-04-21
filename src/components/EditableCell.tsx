@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 
+type SelectOption = string | { value: string; label: string };
+
 type EditableCellProps<T extends string | number> = {
   value: T;
   type?: "text" | "number" | "date" | "select";
-  options?: readonly string[];
+  options?: readonly SelectOption[];
   ariaLabel: string;
   className?: string;
   onCommit: (value: T) => void;
@@ -19,6 +21,13 @@ export function EditableCell<T extends string | number>({
 }: EditableCellProps<T>) {
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState(String(value ?? ""));
+  const normalizedOptions = useMemo(
+    () =>
+      options.map((option) =>
+        typeof option === "string" ? { value: option, label: option || "—" } : option
+      ),
+    [options]
+  );
 
   useEffect(() => {
     setDraft(String(value ?? ""));
@@ -29,8 +38,12 @@ export function EditableCell<T extends string | number>({
       return new Intl.NumberFormat("ru-RU", { maximumFractionDigits: 0 }).format(value);
     }
 
+    if (type === "select") {
+      return normalizedOptions.find((option) => option.value === String(value))?.label ?? String(value || "—");
+    }
+
     return String(value || "—");
-  }, [type, value]);
+  }, [normalizedOptions, type, value]);
 
   function commit(next = draft) {
     const nextValue = type === "number" ? Number(String(next).replace(/\s/g, "")) : next;
@@ -57,9 +70,9 @@ export function EditableCell<T extends string | number>({
           }}
           onBlur={() => commit()}
         >
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option || "—"}
+          {normalizedOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
             </option>
           ))}
         </select>

@@ -39,11 +39,27 @@ export function formatPercent(value: number) {
 }
 
 export function transportLabel(type: TransportType) {
-  return type === "rail_direct" ? "Прямое ЖД" : "Море";
+  if (type === "rail_direct") {
+    return "Прямое ЖД";
+  }
+
+  if (type === "rail_domestic") {
+    return "ЖД внутри России";
+  }
+
+  return "Море";
 }
 
 export function operatorLabel(type: TransportType, shippingLine: string) {
-  return type === "rail_direct" ? "ЖД маршрут" : shippingLine || "Морская линия";
+  if (type === "rail_direct") {
+    return "ЖД маршрут";
+  }
+
+  if (type === "rail_domestic") {
+    return "Внутри России";
+  }
+
+  return shippingLine || "Морская линия";
 }
 
 export function todayISO() {
