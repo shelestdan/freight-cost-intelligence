@@ -1,0 +1,12 @@
+.next
+node_modules
+out
+.tools
+tmp-shots
+dist
+coverage
+.DS_Store
+*.log
+.omx/
+.playwright-cli/
+tsconfig.tsbuildinfo
