@@ -97,7 +97,7 @@ The app uses `vite.config.ts` `base` derived from `GITHUB_REPOSITORY` inside Act
 Data is saved to:
 
 ```text
-localStorage["freight-dashboard-routes-v3"]
+localStorage["freight-dashboard-routes-v4"]
 ```
 
 Use `Demo` to reset seeded rows or `Clear` to empty all local data.

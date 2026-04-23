@@ -1,22 +1,44 @@
 import { useCallback, useEffect, useState } from "react";
-import { demoRoutes } from "../data/demoRoutes";
+import { demoRoutes, fescoExtraExpenses } from "../data/demoRoutes";
 import type { RouteRecord } from "../types/logistics";
 
-const STORAGE_KEY = "freight-dashboard-routes-v3";
-const LEGACY_STORAGE_KEYS = ["freight-dashboard-routes-v2", "freight-dashboard-routes-v1"];
+const STORAGE_KEY = "freight-dashboard-routes-v4";
+const LEGACY_STORAGE_KEYS = [
+  "freight-dashboard-routes-v3",
+  "freight-dashboard-routes-v2",
+  "freight-dashboard-routes-v1"
+];
 
 function defaultAdditionalExpenses(record: RouteRecord) {
   if (record.transport_type === "sea") {
-    return "FESCO: возможны доп. расходы по хранению, корректировке коносамента, отмене букировки, таможенным процедурам, VGM/взвешиванию, пломбировке, маркировке, сортировке и сверхнормативному использованию контейнера.";
+    return fescoExtraExpenses;
   }
 
   return "Дополнительные расходы уточнять отдельно по условиям перевозчика.";
 }
 
+function normalizeAdditionalExpenses(record: RouteRecord) {
+  const current = record.additional_expenses ?? "";
+
+  if (record.transport_type !== "sea") {
+    return current || defaultAdditionalExpenses(record);
+  }
+
+  if (!current || current.includes("FESCO: возможны доп. расходы")) {
+    return fescoExtraExpenses;
+  }
+
+  if (current.includes("Базовый тариф FOR") && current.includes("1900 руб. за 40-футовую")) {
+    return current;
+  }
+
+  return `${current} ${fescoExtraExpenses}`;
+}
+
 function normalizeRoutes(records: RouteRecord[]) {
   return records.map((record) => ({
     ...record,
-    additional_expenses: record.additional_expenses ?? defaultAdditionalExpenses(record)
+    additional_expenses: normalizeAdditionalExpenses(record)
   }));
 }
 
