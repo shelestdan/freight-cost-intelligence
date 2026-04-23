@@ -4,6 +4,8 @@ const currencies: Currency[] = ["RUB", "USD", "CNY", "EUR"];
 
 type ToolbarProps = {
   currency: Currency;
+  lastSavedAt: string | null;
+  storageKey: string;
   setCurrency: (currency: Currency) => void;
   onAdd: () => void;
   onReset: () => void;
@@ -14,6 +16,8 @@ type ToolbarProps = {
 
 export function Toolbar({
   currency,
+  lastSavedAt,
+  storageKey,
   setCurrency,
   onAdd,
   onReset,
@@ -28,6 +32,7 @@ export function Toolbar({
         <div>
           <p className="section-kicker">Static freight intelligence</p>
           <h1>Freight Cost Control</h1>
+          <small>Сохранение: {storageKey} · {lastSavedAt ?? "ожидание"}</small>
         </div>
       </div>
 
@@ -43,7 +48,7 @@ export function Toolbar({
           </select>
         </label>
         <button type="button" onClick={onAdd}>
-          Добавить строку
+          Новая ставка
         </button>
         <button type="button" className="ghost-button" onClick={onExportCSV}>
           CSV

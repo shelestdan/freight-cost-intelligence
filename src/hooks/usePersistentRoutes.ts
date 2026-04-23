@@ -4,6 +4,7 @@ import type { RouteRecord } from "../types/logistics";
 
 const STORAGE_KEY = "freight-dashboard-routes";
 const STORAGE_VERSION_KEY = "freight-dashboard-routes-schema-version";
+const STORAGE_BACKUP_KEY = "freight-dashboard-routes-last-backup";
 const STORAGE_SCHEMA_VERSION = 4;
 const LEGACY_STORAGE_KEYS = [
   "freight-dashboard-routes-v4",
@@ -67,6 +68,20 @@ function parseStoredRoutes(stored: string) {
   return Array.isArray(parsed) ? normalizeRoutes(parsed as RouteRecord[]) : null;
 }
 
+function backupRoutes(records: RouteRecord[]) {
+  if (typeof window === "undefined" || !records.length) {
+    return;
+  }
+
+  window.localStorage.setItem(
+    STORAGE_BACKUP_KEY,
+    JSON.stringify({
+      created_at: new Date().toISOString(),
+      records
+    })
+  );
+}
+
 function readInitialRoutes() {
   if (typeof window === "undefined") {
     return demoRoutes;
@@ -95,10 +110,12 @@ function readInitialRoutes() {
 
 export function usePersistentRoutes() {
   const [records, setRecords] = useState<RouteRecord[]>(readInitialRoutes);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
   useEffect(() => {
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     window.localStorage.setItem(STORAGE_VERSION_KEY, String(STORAGE_SCHEMA_VERSION));
+    setLastSavedAt(new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }));
   }, [records]);
 
   const updateRecord = useCallback((id: string, patch: Partial<RouteRecord>) => {
@@ -116,11 +133,17 @@ export function usePersistentRoutes() {
   }, []);
 
   const resetDemo = useCallback(() => {
-    setRecords(demoRoutes);
+    setRecords((current) => {
+      backupRoutes(current);
+      return demoRoutes;
+    });
   }, []);
 
   const clearAll = useCallback(() => {
-    setRecords([]);
+    setRecords((current) => {
+      backupRoutes(current);
+      return [];
+    });
   }, []);
 
   return {
@@ -130,6 +153,9 @@ export function usePersistentRoutes() {
     addRecord,
     deleteRecord,
     resetDemo,
-    clearAll
+    clearAll,
+    lastSavedAt,
+    storageKey: STORAGE_KEY,
+    backupKey: STORAGE_BACKUP_KEY
   };
 }
