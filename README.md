@@ -7,7 +7,7 @@ Static React/Vite dashboard for international freight cost analysis. Built for G
 1. Operations cockpit, not admin template: KPI strip, route lattice background, dense but calm work surface.
 2. Inline editing is main UX: click table cell, edit, press Enter or blur, localStorage saves instantly.
 3. Every edit recalculates KPI, ЖД vs море comparison, leaderboard, charts, and route badges.
-4. Data model supports direct rail plus any number of sea lines.
+4. Data model supports direct rail, intra-Russia rail, sea lines, and editable additional expenses.
 5. Demo data is seeded from priced workbook rows: sea container rows 30-72 and direct rail rows 87-98.
 6. Currency toggle works fully on frontend with fixed local coefficients.
 7. Empty/no-results states keep the dashboard usable when filters remove all rows.
@@ -55,7 +55,7 @@ type RouteRecord = {
   destination_country: string;
   destination_city: string;
   destination_port_or_station: string;
-  transport_type: "rail_direct" | "sea";
+  transport_type: "rail_direct" | "rail_domestic" | "sea";
   shipping_line: string;
   route_name: string;
   cost: number;
@@ -63,6 +63,7 @@ type RouteRecord = {
   transit_days: number;
   updated_at: string;
   comment: string;
+  additional_expenses: string;
 };
 ```
 
@@ -96,7 +97,7 @@ The app uses `vite.config.ts` `base` derived from `GITHUB_REPOSITORY` inside Act
 Data is saved to:
 
 ```text
-localStorage["freight-dashboard-routes-v2"]
+localStorage["freight-dashboard-routes-v3"]
 ```
 
 Use `Demo` to reset seeded rows or `Clear` to empty all local data.

@@ -15,7 +15,8 @@ const csvFields: (keyof RouteRecord)[] = [
   "currency",
   "transit_days",
   "updated_at",
-  "comment"
+  "comment",
+  "additional_expenses"
 ];
 
 function escapeCell(value: unknown) {

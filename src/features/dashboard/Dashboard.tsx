@@ -31,7 +31,8 @@ function createBlankRecord(): RouteRecord {
     currency: "RUB",
     transit_days: 0,
     updated_at: todayISO(),
-    comment: ""
+    comment: "",
+    additional_expenses: ""
   };
 }
 

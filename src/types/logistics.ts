@@ -18,6 +18,7 @@ export interface RouteRecord {
   transit_days: number;
   updated_at: string;
   comment: string;
+  additional_expenses: string;
 }
 
 export interface RouteFilters {

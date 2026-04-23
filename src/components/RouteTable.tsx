@@ -40,7 +40,8 @@ const columns: { key: SortKey; label: string }[] = [
   { key: "currency", label: "Валюта" },
   { key: "transit_days", label: "Дни" },
   { key: "updated_at", label: "Дата" },
-  { key: "comment", label: "Комментарий" }
+  { key: "comment", label: "Комментарий" },
+  { key: "additional_expenses", label: "Доп. расходы" }
 ];
 
 export function RouteTable({
@@ -162,6 +163,13 @@ export function RouteTable({
                   </td>
                   <td>
                     <EditableCell value={record.comment} ariaLabel="comment" onCommit={(value) => onUpdate(record.id, { comment: value })} />
+                  </td>
+                  <td>
+                    <EditableCell
+                      value={record.additional_expenses}
+                      ariaLabel="additional_expenses"
+                      onCommit={(value) => onUpdate(record.id, { additional_expenses: value })}
+                    />
                   </td>
                   <td>
                     {isBest && comparison?.cheaperThanNextPercent ? (
