@@ -97,7 +97,9 @@ The app uses `vite.config.ts` `base` derived from `GITHUB_REPOSITORY` inside Act
 Data is saved to:
 
 ```text
-localStorage["freight-dashboard-routes-v4"]
+localStorage["freight-dashboard-routes"]
 ```
+
+The storage key is intentionally stable across releases so client-entered rows and edits survive GitHub Pages deploys. Schema changes are tracked separately in `localStorage["freight-dashboard-routes-schema-version"]`; old keys such as `freight-dashboard-routes-v4` are read as legacy data and migrated into the stable key.
 
 Use `Demo` to reset seeded rows or `Clear` to empty all local data.
